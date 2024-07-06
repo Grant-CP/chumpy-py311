@@ -1200,7 +1200,9 @@ def depends_on(*dependencies):
             [deps.add(d) for d in dep]
     
     def _depends_on(func):
-        want_out = 'out' in inspect.getargspec(func).args
+        # Hack time June 22 2024 https://docs.python.org/3/library/inspect.html#retrieving-source-code
+        want_out = 'out' in inspect.getfullargspec(func).args
+        #want_out = 'out' in inspect.getargspec(func).args
         
         @wraps(func)
         def with_caching(self, *args, **kwargs):
@@ -1243,7 +1245,8 @@ class ChLambda(Ch):
             self.args[argname].x = getattr(self, argname)
     
     def __init__(self, lmb, initial_args=None):
-        args = {argname: ChHandle(x=Ch(idx)) for idx, argname in enumerate(inspect.getargspec(lmb)[0])}
+        # HACKY change, which did get me past an error haha. This library depends on very old code :(
+        args = {argname: ChHandle(x=Ch(idx)) for idx, argname in enumerate(inspect.getfullargspec(lmb)[0])}
         if initial_args is not None:
             for initial_arg in initial_args:
                 if initial_arg in args:

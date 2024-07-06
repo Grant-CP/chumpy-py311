@@ -8,6 +8,8 @@ from .version import version as __version__
 
 from .version import version as __version__
 
+#from numpy import bool, int, float, complex, object, unicode, str, nan, inf #HACK
+# I decided to just fork Chumpy. So presumably others can install from there?
 
 def test():
     from os.path import split
